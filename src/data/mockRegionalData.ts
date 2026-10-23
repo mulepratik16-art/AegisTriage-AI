@@ -1,4 +1,4 @@
-import { HospitalFacility, FleetUnit, PatientIntake, AuditBlock } from '../types';
+import { HospitalFacility, FleetUnit, PatientIntake, AuditBlock, TriageEvaluation, DispatchRoutingDecision, AgentStep } from '../types';
 
 export const INITIAL_HOSPITALS: HospitalFacility[] = [
   {
@@ -353,3 +353,126 @@ export const INITIAL_AUDIT_LOGS: AuditBlock[] = [
     }
   }
 ];
+
+export const DEFAULT_INITIAL_TRIAGE: TriageEvaluation = {
+  esiLevel: 1,
+  esiCategory: 'Resuscitation (Immediate Life Threat)',
+  shockIndex: 1.3,
+  mapBp: 64.7,
+  acuityScore: 95,
+  clinicalRationale: 'Patient presents with acute inferior STEMI (4mm ST elevations in II, III, aVF) accompanied by severe hypotension (SBP 86 mmHg) and tachycardia (HR 112 bpm), yielding a Shock Index of 1.30 diagnostic of impending cardiogenic shock. Requires immediate emergent cardiac catheterization and percutaneous coronary intervention (PCI) within the 90-minute window.',
+  requiredSpecialties: ['Interventional Cardiology / Cath Lab', 'Cardiovascular ICU', 'Coronary Care Unit'],
+  criticalTimeWindowMinutes: 90,
+  recommendedFieldActions: [
+    'Acquire serial 12-lead ECGs every 10 minutes',
+    'Withhold sublingual nitroglycerin due to right ventricular involvement and hypotension',
+    'Initiate cautious IV crystalloid bolus (250ml) to maintain RV preload',
+    'Transmit live rhythm telemetry directly to destination STEMI receiving center'
+  ],
+  safetyAlerts: [
+    'Cardiogenic shock alert: Hemodynamic instability with SBP < 90',
+    'Right ventricular infarction suspected: Nitrates contraindicated'
+  ]
+};
+
+export const DEFAULT_INITIAL_ROUTING: DispatchRoutingDecision = {
+  destinationHospital: INITIAL_HOSPITALS[1], // St. Jude Heart & Vascular Institute
+  assignedFleetUnit: INITIAL_FLEET[0], // Medic 1 (ALS)
+  transportType: 'GROUND_ALS',
+  estimatedTransitMinutes: 7,
+  totalTimeMinutes: 13,
+  goldenHourRisk: 'LOW',
+  optimizationScore: 98.4,
+  diversionOverridden: false,
+  preArrivalInstructions: [
+    'Transmit 12-lead ECG telemetry directly to St. Jude Cardiac Emergency Intake',
+    'Notify On-Duty Interventional Cardiologist on MedNet Channel 2 (155.280 MHz)',
+    'Prepare Cath Lab Suite #1 for emergent primary PCI and radial artery access',
+    'Pre-alert cardiac ICU for post-revascularization impella / inotrope support'
+  ],
+  reservedResources: {
+    icuBedReserved: true,
+    traumaBayReserved: true,
+    cathLabPreAlerted: true,
+    strokeTeamStandby: false,
+    holdConfirmationId: 'HOLD-9041-CARD'
+  }
+};
+
+export const DEFAULT_INITIAL_STEPS: AgentStep[] = [
+  {
+    agentName: 'Clinical Triage & Risk Stratification Agent',
+    role: 'ESI & Resuscitation Diagnostics',
+    status: 'COMPLETED',
+    durationMs: 412,
+    summary: 'Classified as ESI 1 (Resuscitation) with Shock Index 1.30. Required service: Interventional Cardiology / Cath Lab.',
+    reasoning: 'Evaluated 12-lead ECG showing 4mm ST elevations with refractory chest pain, hypotension SBP 86, and tachycardia HR 112. Calculated Shock Index 1.30 confirms cardiogenic shock physiology requiring emergent revascularization.',
+    metrics: {
+      'ESI Level': 1,
+      'Shock Index': 1.3,
+      'Acuity Score': '95/100',
+      'Golden Window': '90m'
+    },
+    guardrailsPassed: true,
+    guardrailNotes: [
+      'Validated hemodynamics against ESI-5 clinical triage criteria',
+      'Identified critical contraindication: Nitroglycerin contraindicated in inferior/RV STEMI'
+    ]
+  },
+  {
+    agentName: 'Geospatial & Bed-Capacity Optimization Solver',
+    role: 'Multi-Objective Resource Allocator',
+    status: 'COMPLETED',
+    durationMs: 284,
+    summary: 'Selected St. Jude Heart & Vascular Institute (Score: 98.4, Transit: 7m). Assigned unit Medic 1 (ALS).',
+    reasoning: 'Evaluated 6 regional medical centers. St. Jude Heart Institute features an active 24/7 STEMI Cath Lab with zero offload delay (11m avg) and 6 open ICU beds. Distance is 2.8 km with 7m transit time, well inside the 90m door-to-balloon benchmark.',
+    metrics: {
+      'Candidate Centers': 6,
+      'Top Facility Score': 98.4,
+      'Est. Transit Time': '7 min',
+      'Distance': '2.8 km'
+    },
+    guardrailsPassed: true,
+    guardrailNotes: [
+      'Door-to-balloon target window satisfied (7m transit + 6m scene = 13m vs 90m limit)',
+      'ALS crew certified for 12-lead ECG telemetry transmission'
+    ]
+  },
+  {
+    agentName: 'Clinical Safety & Protocol Guardrail Agent',
+    role: 'Independent Adversarial Compliance Auditor',
+    status: 'COMPLETED',
+    durationMs: 198,
+    summary: 'All safety guardrails verified: EMTALA compliance, cath lab readiness, and golden hour windows passed.',
+    reasoning: 'Conducted independent regulatory verification: St. Jude is operating normally with no diversion. Receiving cath lab confirmed operational and accepting code STEMI alerts.',
+    metrics: {
+      'EMTALA Status': 'COMPLIANT',
+      'Golden Window Status': 'LOW_RISK',
+      'Checks Executed': 5
+    },
+    guardrailsPassed: true,
+    guardrailNotes: [
+      'Verified St. Jude Heart Institute is active and not on diversion',
+      'Pre-arrival bypass protocol activated for direct catheterization suite entry'
+    ]
+  },
+  {
+    agentName: 'Autonomous Dispatch & Bed-Reservation Coordinator',
+    role: 'Execution & Cryptographic Tamper-Proofing',
+    status: 'COMPLETED',
+    durationMs: 165,
+    summary: 'Dispatched Medic 1 (ALS). Hold ID #HOLD-9041-CARD locked. Cryptographic SHA-256 seal generated.',
+    reasoning: 'Locked automated cardiac ICU bed hold #HOLD-9041-CARD, signaled receiving cath team, and anchored the complete decision graph into the cryptographic SHA-256 ledger.',
+    metrics: {
+      'Bed Hold ID': 'HOLD-9041-CARD',
+      'Dispatch Latency': '1059ms',
+      'Audit Block': '#103'
+    },
+    guardrailsPassed: true,
+    guardrailNotes: [
+      'Cryptographic hash chain validated against parent block #102',
+      'Pre-arrival notification transmitted over MedNet Channel 2'
+    ]
+  }
+];
+

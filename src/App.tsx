@@ -26,17 +26,20 @@ import {
   INITIAL_HOSPITALS,
   INITIAL_FLEET,
   INITIAL_AUDIT_LOGS,
-  PRESET_SCENARIOS
+  PRESET_SCENARIOS,
+  DEFAULT_INITIAL_TRIAGE,
+  DEFAULT_INITIAL_ROUTING,
+  DEFAULT_INITIAL_STEPS
 } from './data/mockRegionalData.ts';
 import { Activity, ShieldCheck, Zap, Hospital, ArrowRight, Ambulance } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'triage' | 'map' | 'agents' | 'hospitals' | 'metrics'>('triage');
   const [patient, setPatient] = useState<PatientIntake>(PRESET_SCENARIOS[0]);
-  const [triage, setTriage] = useState<TriageEvaluation | undefined>(undefined);
-  const [routing, setRouting] = useState<DispatchRoutingDecision | undefined>(undefined);
-  const [steps, setSteps] = useState<AgentStep[]>([]);
-  const [auditBlock, setAuditBlock] = useState<AuditBlock | undefined>(undefined);
+  const [triage, setTriage] = useState<TriageEvaluation | undefined>(DEFAULT_INITIAL_TRIAGE);
+  const [routing, setRouting] = useState<DispatchRoutingDecision | undefined>(DEFAULT_INITIAL_ROUTING);
+  const [steps, setSteps] = useState<AgentStep[]>(DEFAULT_INITIAL_STEPS);
+  const [auditBlock, setAuditBlock] = useState<AuditBlock | undefined>(INITIAL_AUDIT_LOGS[INITIAL_AUDIT_LOGS.length - 1]);
   const [auditLogs, setAuditLogs] = useState<AuditBlock[]>(INITIAL_AUDIT_LOGS);
   const [hospitals, setHospitals] = useState<HospitalFacility[]>(INITIAL_HOSPITALS);
   const [fleet, setFleet] = useState<FleetUnit[]>(INITIAL_FLEET);
@@ -404,7 +407,7 @@ export default function App() {
             <span>·</span>
             <span>Autonomous Emergency Dispatch & Critical Care Routing</span>
             <span>·</span>
-            <span>Google Gemini-3.8-Flash Full-Stack Architecture</span>
+            <span>Multi-Agent Trauma Logistics Network</span>
           </div>
 
           <div className="flex items-center gap-3 text-slate-400">

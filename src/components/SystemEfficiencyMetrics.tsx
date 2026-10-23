@@ -116,10 +116,10 @@ export const SystemEfficiencyMetrics: React.FC = () => {
         <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/50 space-y-2">
           <div className="flex items-center gap-2 text-slate-200 font-semibold">
             <TrendingUp className="w-4 h-4 text-emerald-400" />
-            <span>Google Gemini-3.8-Flash Core</span>
+            <span>Structured Clinical Reasoning Core</span>
           </div>
           <p className="text-slate-400 leading-relaxed">
-            Powered by Google’s @google/genai SDK with strict typed JSON schema outputs, executing multi-turn clinical reasoning in under 800ms with deterministic fail-safe fallbacks.
+            High-throughput neural reasoning with strict typed schema outputs, executing multi-turn clinical triage in under 800ms with deterministic fail-safe fallbacks.
           </p>
         </div>
       </div>

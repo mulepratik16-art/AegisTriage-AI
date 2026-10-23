@@ -1,0 +1,6 @@
+{
+  "name": "AegisTriage AI - Autonomous Emergency Dispatch & Clinical Resource System",
+  "description": "Production-grade multi-agent AI system orchestrating real-time clinical triage, regional hospital surge optimization, geospatial dispatch, and cryptographic safety audit trails.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
